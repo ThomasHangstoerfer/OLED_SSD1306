@@ -1,0 +1,6 @@
+*.o
+display
+str2bin
+fips/display
+fips/*.o
+backup*
