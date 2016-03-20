@@ -15,7 +15,10 @@ public:
 	void update();
 	void addWindow(std::string name, window w);
 
+	void setVisible(bool v);
+
 private:
+	bool mVisible;
 	std::map<std::string, window> mWindows;
 
 };

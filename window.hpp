@@ -13,11 +13,14 @@ public:
 	window();
 	window(const window& w);
 	window(int x1, int y1, int x2, int y2);
+	window(int x1, int y1, std::string content);
 
+	void setContent(std::string content);
 	void setContent(std::vector<unsigned char> content);
 	void setContent(std::vector<char> content);
 	void setRange(int x1, int y1, int x2, int y2 );
 	void update();
+	void dump();
 
 	friend std::ostream& operator<< (std::ostream& stream, const window& w)
 	{
@@ -34,6 +37,7 @@ private:
 
 	std::vector<unsigned char> mByteContent;
 	std::vector<char> mCharContent;
+	std::string mStringContent;
 };
 
 #endif

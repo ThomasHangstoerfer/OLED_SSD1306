@@ -160,42 +160,34 @@ int main(int argc, char *argv[])
   printTxt(display, "               ");
   printTxt(display, "     TEST      ");
 
-/*
-  wiringPiI2CWriteReg8(display, 0x00, 0xd3); // offset
-  wiringPiI2CWriteReg8(display, 0x00, 0x01);
-  usleep(1000000);
-  wiringPiI2CWriteReg8(display, 0x00, 0xd3); // offset
-  wiringPiI2CWriteReg8(display, 0x00, 0x02);
-  usleep(1000000);
-  wiringPiI2CWriteReg8(display, 0x00, 0xd3); // offset
-  wiringPiI2CWriteReg8(display, 0x00, 0x03);
-  usleep(1000000);
-  wiringPiI2CWriteReg8(display, 0x00, 0xd3); // offset
-  wiringPiI2CWriteReg8(display, 0x00, 0x02);
-  usleep(1000000);
-  wiringPiI2CWriteReg8(display, 0x00, 0xd3); // offset
-  wiringPiI2CWriteReg8(display, 0x00, 0x01);
-  usleep(1000000);
-  wiringPiI2CWriteReg8(display, 0x00, 0xd3); // offset
-  wiringPiI2CWriteReg8(display, 0x00, 0x00);
-*/
 
 
-  window w(4, 2, 6, 4);
-  std::vector<char> content;
-
-  int mychars[] = {'A', 'B', 'C'};
-  content.assign (mychars,mychars+3);   // assigning from array.
-
-  w.setContent(content);
-
-
-  screen s;
-  s.addWindow("days", w);
-  s.update();
+  screen s1;
+  s1.setVisible(true);
+  window w(2, 1, "28°C");
+  window w2(0, 4, (std::string)"Thomas");
+  s1.addWindow("days", w);
+  s1.addWindow("days2", w2);
+  s1.update();
 
 
-    printTxt(display, "THOMAS          ");
+  sleep(2);
+
+  screen s2;
+  window s2w1(6, 5, "14%");
+  window s2w2(2, 3, (std::string)"Load");
+  s2.addWindow("loadval", s2w1);
+  s2.addWindow("loadlabel", s2w2);
+  s2.update();
+
+
+  sleep(2);
+
+  s1.setVisible(false);
+  clear(display);
+  s2.setVisible(true);
+
+  //printTxt(display, "THOMAS          ");
 
   /*
       for (int z = 0; z < 70; z++)
