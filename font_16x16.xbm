@@ -1,8 +1,9 @@
 
 // font by dw817
 
-#define font_16x16_char_width 16
+#define font_16x16_char_byte_width 2
 #define font_16x16_char_height 16
+#define font_16x16_chars_per_line 16
 #define font_16x16_data_width 256
 #define font_16x16_data_height 96
 static char font_16x16_data_bits[] = {

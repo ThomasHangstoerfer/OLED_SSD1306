@@ -5,11 +5,16 @@
 
 /*
 
-convert -resize 7x13\! -font Garuda -pointsize 10 label:A A.xbm
 
 g++ display.cpp window.cpp font.c font2.c -o display -lwiringPi && ./display
 
 Based on a user-comment on amazon from Rouven R.
+
+convert -resize 7x13\! -font Garuda -pointsize 10 label:A A.xbm
+
+Font in Gimp schwarz/weiss machen, zb 16x6 Zeichen
+Exportieren als png
+convert -monochrome 16x16_pixel_font.png font_16x16.xbm
 
 */
 
@@ -20,9 +25,8 @@ Based on a user-comment on amazon from Rouven R.
 #include <string>
 #include "window.hpp"
 #include "screen.hpp"
-#include "6.xbm"
-#include "B.xbm"
-#include "test.xbm"
+
+
 extern long long int font[];
 extern char font2[128][8];
 
