@@ -28,7 +28,7 @@ void screen::update()
 	{
 		//std::cout << it->first << " => " << it->second << '\n';		
 		std::cout << "Updating window " << it->first  << '\n';
-		it->second.dump();
+		//it->second.dump();
 		it->second.update();
 	}
 }

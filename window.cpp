@@ -48,7 +48,8 @@ window::window(const window& w)
 	mX2 = w.mX2;
 	mY2 = w.mY2;
 	mStringContent = w.mStringContent;
-	printf("copy contructor: %s -> %s\n", w.mStringContent.c_str(), mStringContent.c_str());
+	// TODO gets called too often
+	//printf("copy contructor: %s -> %s\n", w.mStringContent.c_str(), mStringContent.c_str());
 }
 
 window::window(int x1, int y1, std::string content)

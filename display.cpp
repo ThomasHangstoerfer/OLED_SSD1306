@@ -23,9 +23,10 @@ convert -monochrome 16x16_pixel_font.png font_16x16.xbm
 #include <string.h>
 #include <stdio.h>
 #include <string>
+
 #include "window.hpp"
 #include "screen.hpp"
-
+#include "screen_controller.hpp"
 
 extern long long int font[];
 extern char font2[128][8];
@@ -161,51 +162,53 @@ int main(int argc, char *argv[])
   printTxt(display, "     TEST      ");
 
 
+  clear(display);
+  printf("start\n");
+  screen_controller sc;
 
   screen s1;
-  s1.setVisible(true);
+  //s1.setVisible(true);
   window w(2, 1, "28°C");
   window w2(0, 4, (std::string)"Thomas");
-  s1.addWindow("days", w);
-  s1.addWindow("days2", w2);
-  s1.update();
-
-
-  sleep(2);
+  s1.addWindow("tempval", w);
+  s1.addWindow("label", w2);
+  sc.addScreen("temperature", s1);
 
   screen s2;
   window s2w1(6, 5, "14%");
   window s2w2(2, 3, (std::string)"Load");
   s2.addWindow("loadval", s2w1);
   s2.addWindow("loadlabel", s2w2);
-  s2.update();
+  sc.addScreen("load", s2);
+  printf("setup finished\n");
 
 
-  sleep(2);
-
-  s1.setVisible(false);
+  printf("showScreen(temperature)\n");
   clear(display);
-  s2.setVisible(true);
+  sc.showScreen("temperature");
 
-  //printTxt(display, "THOMAS          ");
+  char in;
+  //scanf("%c", &in);
 
-  /*
-      for (int z = 0; z < 70; z++)
-      {
-                    render(display, font2[(z%10)+48]);
-        sleep(1);
-      }
-  */
-
-/*
-  for (int z = 0; z < test_height; z++)
+  int mode = 0;
+  while(scanf("%c", &in))
   {
-    if ( z % 2 == 0 )
-      printf("\n");
-    printf("%s", byte_to_binary(test_bits[z]));
-
+      if (mode == 0)
+      {
+        printf("showScreen(load)\n");
+        clear(display);
+        sc.showScreen("load");
+        mode = 1;
+      }
+      else
+      {
+        printf("showScreen(temperature)\n");
+        clear(display);
+        sc.showScreen("temperature");
+        mode = 0;
+      }
   }
-  render(display, test_bits);
-*/
+
+
 }
 
