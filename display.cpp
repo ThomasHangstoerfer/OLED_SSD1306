@@ -18,21 +18,57 @@ convert -monochrome 16x16_pixel_font.png font_16x16.xbm
 
 */
 
+#include <wiringPi.h>
 #include <wiringPiI2C.h>
 #include <unistd.h>
 #include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string>
 
 #include "window.hpp"
 #include "screen.hpp"
+#include "load_screen.hpp"
 #include "screen_controller.hpp"
 
 extern long long int font[];
 extern char font2[128][8];
 
+const int butPin = 23; // Active-low button - Broadcom pin 17, P1 pin 11
+
+  screen_controller sc;
+
+void button_pressed()
+{
+  printf("button_pressed\n");
+    sc.showNext();
+
+}
+
 void init(int display)
 {
+
+
+  wiringPiSetupGpio(); // Initialize wiringPi -- using Broadcom pin numbers
+  pinMode(butPin, INPUT);      // Set button as INPUT
+  pullUpDnControl(butPin, PUD_DOWN); // Enable pull-up resistor on button
+
+
+  //int wiringPiISR (int pin, int edgeType,  void (*function)(void)) ;
+  wiringPiISR(butPin, INT_EDGE_RISING, button_pressed);
+
+//  sleep(10);
+  //while(1)
+  //{
+  //  if (digitalRead(butPin)) // Button is released if this returns 1
+  //  {
+  //    print("rel");
+  //  }
+  //  else // If digitalRead returns 0, button is pressed
+  //  {
+  //  }
+  //}
+
   wiringPiI2CWriteReg8(display, 0x00, 0xae); // display off
   wiringPiI2CWriteReg8(display, 0x00, 0xd5); // clockdiv
   wiringPiI2CWriteReg8(display, 0x00, 0x80);
@@ -158,13 +194,17 @@ int main(int argc, char *argv[])
   clear(display);
   render(display, test);
   render(display, test2);
-  printTxt(display, "               ");
-  printTxt(display, "     TEST      ");
-
+  printTxt(display, "              ");
+  printTxt(display, "                ");
+  printTxt(display, "H A L L O       ");
+  printTxt(display, "                ");
+  printTxt(display, "Gefaellt Dir    ");
+  printTxt(display, "mein Hut?       ");
+//  return 1;
 
   clear(display);
   printf("start\n");
-  screen_controller sc;
+//  screen_controller sc;
 
   screen s1;
   //s1.setVisible(true);
@@ -180,12 +220,30 @@ int main(int argc, char *argv[])
   s2.addWindow("loadval", s2w1);
   s2.addWindow("loadlabel", s2w2);
   sc.addScreen("load", s2);
+
+  screen s3;
+  window s3w1(1, 5, "Philipp");
+  window s3w2(2, 3, (std::string)"Hallo");
+  s3.addWindow("loadval", s3w1);
+  s3.addWindow("loadlabel", s3w2);
+  sc.addScreen("fips", s3);
   printf("setup finished\n");
 
+//  load_screen ls;
+//  sc.addScreen("loadscreen", ls);
 
   printf("showScreen(temperature)\n");
   clear(display);
   sc.showScreen("temperature");
+
+
+
+  // TODO clock-screen
+
+while (true)
+{
+  sleep(1);
+}
 
   char in;
   //scanf("%c", &in);
@@ -193,6 +251,10 @@ int main(int argc, char *argv[])
   int mode = 0;
   while(scanf("%c", &in))
   {
+    printf("sc.showNext()\n");
+    sc.showNext();
+
+    /*
       if (mode == 0)
       {
         printf("showScreen(load)\n");
@@ -200,13 +262,21 @@ int main(int argc, char *argv[])
         sc.showScreen("load");
         mode = 1;
       }
-      else
+      else if (mode == 1)
       {
         printf("showScreen(temperature)\n");
         clear(display);
         sc.showScreen("temperature");
+        mode = 2;
+      }
+      else
+      {
+        printf("showScreen(fips)\n");
+        clear(display);
+        sc.showScreen("fips");
         mode = 0;
       }
+      */
   }
 
 

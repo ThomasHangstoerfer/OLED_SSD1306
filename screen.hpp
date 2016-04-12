@@ -14,8 +14,11 @@ public:
 	screen();
 	void update();
 	void addWindow(std::string name, window w);
+	void removeWindow(std::string name);
 
 	void setVisible(bool v);
+
+	void dump();
 
 private:
 	bool mVisible;

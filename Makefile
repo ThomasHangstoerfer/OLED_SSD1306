@@ -26,8 +26,8 @@ INCLUDES = -I.
 LIBS = -lwiringPi
 
 # define the C source files
-SRCS = display.cpp window.cpp screen.cpp font.c font2.c font_16x16.cpp screen_controller.cpp
-HDRS = window.hpp screen.hpp screen_controller.hpp font_16x16.hpp
+SRCS = display.cpp window.cpp screen.cpp font.c font2.c font_16x16.cpp screen_controller.cpp load_screen.cpp
+HDRS = window.hpp screen.hpp screen_controller.hpp font_16x16.hpp load_screen.hpp
 
 # define the C object files 
 #

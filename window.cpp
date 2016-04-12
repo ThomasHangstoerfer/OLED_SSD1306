@@ -118,11 +118,11 @@ void window::update()
 	wiringPiI2CWriteReg8(display, 0x00, 0x21);    // set column address
 	wiringPiI2CWriteReg8(display, 0x00, mX1*8);   // column start address
 	wiringPiI2CWriteReg8(display, 0x00, mX1*8 + mX2*8*2-1); // column end address
-	printf("column start=%i end=%i\n", mX1*8, mX1*8 + mX2*8*2-1);
+	//printf("column start=%i end=%i\n", mX1*8, mX1*8 + mX2*8*2-1);
 	wiringPiI2CWriteReg8(display, 0x00, 0x22); // set page address
 	wiringPiI2CWriteReg8(display, 0x00, mY1);  // page start address
 	wiringPiI2CWriteReg8(display, 0x00, mY2);  // page end address
-	printf("page   start=%i end=%i\n", mY1, mY2);
+	//printf("page   start=%i end=%i\n", mY1, mY2);
 
 	if ( !mStringContent.empty() )
 	{

@@ -5,13 +5,22 @@
 
 screen_controller::screen_controller()
 {
-
+	mCurrentScreen = mScreens.end();
 }
 
 void screen_controller::addScreen(std::string name, screen s)
 {
 	printf("screen_controller::addScreen(%s)\n", name.c_str() );
 	mScreens.insert( std::pair<std::string,screen>(name,s) );
+	if ( mCurrentScreen == mScreens.end() )
+	{
+		printf("first screen\n");
+		// if first screen, set currentScreen to this screen
+		mCurrentScreen = mScreens.begin();
+	}
+printf("mCurrentScreen = 0x%0x\n", (int)&mCurrentScreen);
+mCurrentScreen->second.dump();
+	printf("mScreens.size() = %i\n", mScreens.size());
 }
 
 void screen_controller::removeScreen(std::string name)
@@ -20,6 +29,8 @@ void screen_controller::removeScreen(std::string name)
 	std::map<std::string,screen>::iterator it;
 	it=mScreens.find(name);
 	mScreens.erase (it);
+
+	// TODO check if mCurrentScreen is removed
 }
 
 void screen_controller::showScreen(std::string name)
@@ -33,6 +44,7 @@ void screen_controller::showScreen(std::string name)
 		{
 			it->second.setVisible(true);
 			found = true;
+			mCurrentScreen = it;
 		}	
 		else
 		{
@@ -41,6 +53,29 @@ void screen_controller::showScreen(std::string name)
 	}
 	if (!found)
 		printf("screen '%s' not found\n", name.c_str() );
+}
+
+void screen_controller::showNext()
+{
+	printf("screen_controller::showNext()\n");
+
+	if ( mCurrentScreen == mScreens.end() )
+	{
+		printf("mCurrentScreen == mScreens.end()\n");
+		mCurrentScreen = mScreens.begin();
+	}
+	else
+	{
+		printf("mCurrentScreen++\n");
+		mCurrentScreen++;
+	}
+	printf("showScreen()\n");
+printf("mCurrentScreen = 0x%0x\n", (int)&mCurrentScreen);
+
+mCurrentScreen->second.dump();
+	mCurrentScreen = mScreens.begin();
+//mCurrentScreen->second.setVisible(true);
+	//showScreen(mCurrentScreen->first);
 }
 
 std::vector<std::string> screen_controller::list()

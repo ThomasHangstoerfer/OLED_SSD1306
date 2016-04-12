@@ -168,7 +168,7 @@ int tage_bis_Ostern()
 
   printf("heute %i\n", jetzt);
   printf("ostern %i\n", o);
-  float tage = ((float)((o - jetzt)/3600))/24;
+  float tage = ((float)((o - jetzt)/3600))/24 + 1;
   printf("bis ostern sinds %i tage\n", (int)tage);
 
   return (int)tage;
