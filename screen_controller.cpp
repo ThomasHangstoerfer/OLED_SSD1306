@@ -18,7 +18,7 @@ void screen_controller::addScreen(std::string name, screen s)
 		// if first screen, set currentScreen to this screen
 		mCurrentScreen = mScreens.begin();
 	}
-printf("mCurrentScreen = 0x%0x\n", (int)&mCurrentScreen);
+//printf("mCurrentScreen = 0x%0x\n", (int)&mCurrentScreen);
 mCurrentScreen->second.dump();
 	printf("mScreens.size() = %i\n", mScreens.size());
 }
@@ -70,7 +70,7 @@ void screen_controller::showNext()
 		mCurrentScreen++;
 	}
 	printf("showScreen()\n");
-printf("mCurrentScreen = 0x%0x\n", (int)&mCurrentScreen);
+//printf("mCurrentScreen = 0x%0x\n", (int)&mCurrentScreen);
 
 mCurrentScreen->second.dump();
 	mCurrentScreen = mScreens.begin();

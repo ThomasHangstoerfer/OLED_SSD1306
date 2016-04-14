@@ -6,8 +6,9 @@
 #include <unistd.h>
 
 #include <stdio.h>
+#ifndef NO_WIRING_PI
 #include <wiringPiI2C.h>
-
+#endif
 #include "font_16x16.hpp"
 #include "window.hpp"
 
@@ -114,6 +115,8 @@ void window::update()
 	//printf("window::update()\n");
 	int display = 0x3;
 
+#ifndef NO_WIRING_PI
+
 	// restrict draw-range to the configured area
 	wiringPiI2CWriteReg8(display, 0x00, 0x21);    // set column address
 	wiringPiI2CWriteReg8(display, 0x00, mX1*8);   // column start address
@@ -123,6 +126,7 @@ void window::update()
 	wiringPiI2CWriteReg8(display, 0x00, mY1);  // page start address
 	wiringPiI2CWriteReg8(display, 0x00, mY2);  // page end address
 	//printf("page   start=%i end=%i\n", mY1, mY2);
+#endif
 
 	if ( !mStringContent.empty() )
 	{
@@ -168,6 +172,7 @@ void window::update()
 		// no content to display
 	}
 
+#ifndef NO_WIRING_PI
 	wiringPiI2CWriteReg8(display, 0x00, 0x21); // set column address
 	wiringPiI2CWriteReg8(display, 0x00, 0x00);
 	wiringPiI2CWriteReg8(display, 0x00, 127);
@@ -175,4 +180,5 @@ void window::update()
 	wiringPiI2CWriteReg8(display, 0x00, 0x22); // set page address
 	wiringPiI2CWriteReg8(display, 0x00, 0x00);
 	wiringPiI2CWriteReg8(display, 0x00, 0x07);
+#endif
 }

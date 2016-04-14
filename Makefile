@@ -9,7 +9,13 @@
 CC = g++
 
 # define any compile-time flags
-#CFLAGS = -Wall -g
+#CFLAGS = -Wall -g -DNO_WIRING_PI
+CFLAGS = -g -DNO_WIRING_PI
+
+# define any libraries to link into executable:
+#   if I want to link in libraries (libx.so or libx.a) I use the -llibname
+#   option, something like (this will link in libmylib.so and libm.so:
+#LIBS = -lwiringPi
 
 # define any directories containing header files other than /usr/include
 #
@@ -19,11 +25,6 @@ INCLUDES = -I.
 #   if I wanted to include libraries not in /usr/lib I'd specify
 #   their path using -Lpath, something like:
 #LFLAGS = -L/home/newhall/lib  -L../lib
-
-# define any libraries to link into executable:
-#   if I want to link in libraries (libx.so or libx.a) I use the -llibname 
-#   option, something like (this will link in libmylib.so and libm.so:
-LIBS = -lwiringPi
 
 # define the C source files
 SRCS = display.cpp window.cpp screen.cpp font.c font2.c font_16x16.cpp screen_controller.cpp load_screen.cpp
@@ -62,6 +63,8 @@ $(MAIN): $(OBJS)
 # the rule(a .c file) and $@: the name of the target of the rule (a .o file) 
 # (see the gnu make manual section about automatic variables)
 .c.o:
+		$(CC) $(CFLAGS) $(INCLUDES) -c $<  -o $@
+.cpp.o:
 		$(CC) $(CFLAGS) $(INCLUDES) -c $<  -o $@
 
 clean:

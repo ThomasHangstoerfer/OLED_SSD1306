@@ -26,6 +26,7 @@ public:
 	{
 		//stream << "window x1 = " << w.mX1;
 		//stream << w.mX1;
+		return stream;
 	}
 
 private:

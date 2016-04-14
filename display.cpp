@@ -17,9 +17,11 @@ Exportieren als png
 convert -monochrome 16x16_pixel_font.png font_16x16.xbm
 
 */
-
+#ifndef NO_WIRING_PI
 #include <wiringPi.h>
 #include <wiringPiI2C.h>
+#endif
+
 #include <unistd.h>
 #include <string.h>
 #include <stdio.h>
@@ -48,6 +50,8 @@ void button_pressed()
 void init(int display)
 {
 
+
+#ifndef NO_WIRING_PI
 
   wiringPiSetupGpio(); // Initialize wiringPi -- using Broadcom pin numbers
   pinMode(butPin, INPUT);      // Set button as INPUT
@@ -95,6 +99,8 @@ void init(int display)
   wiringPiI2CWriteReg8(display, 0x00, 0xa4); // resume
   wiringPiI2CWriteReg8(display, 0x00, 0xa6); // normal (not inverted)
   wiringPiI2CWriteReg8(display, 0x00, 0xaf); // display on
+
+#endif
 }
 
 
@@ -113,6 +119,7 @@ const char *byte_to_binary(int x)
 }
 
 void render(int display, char *bitmap) {
+#ifndef NO_WIRING_PI
   char m[8], n[8] = {0};
   memcpy(&m, bitmap, 8);
   for (int y = 0; y < 8; y++) {
@@ -125,39 +132,46 @@ void render(int display, char *bitmap) {
     int a = (int)n[x];
     wiringPiI2CWriteReg8(display, 0x40, a);
   }
+#endif
 }
 
 void reset_pos(int display)
 {
+#ifndef NO_WIRING_PI
   wiringPiI2CWriteReg8(display, 0x00, 0xb0);
   wiringPiI2CWriteReg8(display, 0x00, 0x00);
   wiringPiI2CWriteReg8(display, 0x00, 0x10);
+#endif
 }
 
 void clear(int display)
 {
+#ifndef NO_WIRING_PI
   reset_pos(display);
   for (int x = 0; x < 128; x++) {
     for (int y = 0; y < 8; y++) {
       wiringPiI2CWriteReg8(display, 0x40, 0x00);
     }
   }
+#endif
 }
 
 void clear2(int display)
 {
+#ifndef NO_WIRING_PI
   reset_pos(display);
   for (int x = 0; x < 128; x++) {
     for (int y = 0; y < 8; y++) {
       wiringPiI2CWriteReg8(display, 0x40, 0xff);
     }
   }
+#endif
 }
 
 void printTxt(int display, std::string t)
 {
-  printf("printTxt(%s) size = %i\n", t.c_str(), t.size() );
-  for (int i = 0; i < t.size(); i++ )
+  printf("printTxt(%s) size = %lu\n", t.c_str(), t.size() );
+  for (unsigned int i = 0; i < t.size(); i++ )
   {
     render(display, font2[t[i]]);
 
@@ -188,7 +202,11 @@ int main(int argc, char *argv[])
     0b01000010,
   };
 
+#ifndef NO_WIRING_PI
   int display = wiringPiI2CSetup(0x3c);
+#else
+  int display = 0;
+#endif
   printf("display = %i\n", display);
   init(display);
   clear(display);
