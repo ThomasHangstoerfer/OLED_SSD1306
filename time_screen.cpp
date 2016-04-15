@@ -24,7 +24,7 @@ void update_task(unsigned int wait)
 time_screen::time_screen() : screen()
 {
 	window wLabel(1, 1, "TIME");
-	window wValue(1, 3, "14:31");
+	window wValue(1, 3, getJetzt());
 	addWindow("label", wLabel);
 	addWindow("value", wValue);
 	
