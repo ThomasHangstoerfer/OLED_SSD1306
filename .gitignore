@@ -4,3 +4,5 @@ str2bin
 fips/display
 fips/*.o
 backup*
+.vscode
+browse.VC.db
