@@ -12,15 +12,18 @@ class screen
 public:
 
 	screen();
-	void update();
-	void addWindow(std::string name, window w);
-	void removeWindow(std::string name);
+	virtual ~screen(){};
+	
+	virtual void update();
+	virtual void addWindow(std::string name, window w);
+	virtual void removeWindow(std::string name);
 
-	void setVisible(bool v);
+	virtual void setVisible(bool v);
+	virtual bool isVisible() { return mVisible; }
 
-	void dump();
+	virtual void dump();
 
-private:
+protected:
 	bool mVisible;
 	std::vector<window> mWindows;
 };

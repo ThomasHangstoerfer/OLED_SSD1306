@@ -8,25 +8,22 @@ screen_controller::screen_controller()
 	mCurrentScreen = mScreens.end();
 }
 
-void screen_controller::addScreen(std::string name, screen s)
+void screen_controller::addScreen(std::string name, screen* s)
 {
 	printf("screen_controller::addScreen(%s)\n", name.c_str() );
-	mScreens.insert( std::pair<std::string,screen>(name,s) );
+	mScreens.insert( std::pair<std::string,screen*>(name,s) );
 	if ( mCurrentScreen == mScreens.end() )
 	{
 		printf("first screen\n");
 		// if first screen, set currentScreen to this screen
 		mCurrentScreen = mScreens.begin();
 	}
-//printf("mCurrentScreen = 0x%0x\n", (int)&mCurrentScreen);
-//mCurrentScreen->second.dump();
-	//printf("mScreens.size() = %lu\n", mScreens.size());
 }
 
 void screen_controller::removeScreen(std::string name)
 {
 	printf("screen_controller::removeScreen(%s)\n", name.c_str() );
-	std::map<std::string,screen>::iterator it;
+	std::map<std::string,screen*>::iterator it;
 	it=mScreens.find(name);
 	mScreens.erase (it);
 
@@ -36,22 +33,23 @@ void screen_controller::removeScreen(std::string name)
 void screen_controller::showScreen(std::string name)
 {
 	printf("screen_controller::showScreen(%s)\n", name.c_str() );
-	std::map<std::string,screen>::iterator it;
+	std::map<std::string,screen*>::iterator it;
 	bool found = false;
 	for (it=mScreens.begin(); it!=mScreens.end(); ++it)
 	{
 		if ( it->first == name )
 		{
-			it->second.setVisible(true);
+			it->second->setVisible(true);
 			found = true;
 			mCurrentScreen = it;
-		}	
+		}
 		else
 		{
-			it->second.setVisible(false);
+			if ( it->second->isVisible() )
+				it->second->setVisible(false);
 		}
 	}
-	mCurrentScreen->second.dump();
+	mCurrentScreen->second->dump();
 
 	if (!found)
 		printf("screen '%s' not found\n", name.c_str() );
@@ -77,12 +75,12 @@ void screen_controller::showNext()
 void screen_controller::dump()
 {
 	printf("\n\nscreen_controller::dump()\n");
-	std::map<std::string,screen>::iterator it;
+	std::map<std::string,screen*>::iterator it;
 	bool found = false;
 	for (it=mScreens.begin(); it!=mScreens.end(); ++it)
 	{
 		printf("%12s: \n", it->first.c_str() );
-		it->second.dump();
+		it->second->dump();
 	}
 }
 

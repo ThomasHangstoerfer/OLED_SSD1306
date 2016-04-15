@@ -6,8 +6,8 @@
 
 load_screen::load_screen() : screen()
 {
-	window wLabel(1, 1, "Load");
-	window wValue(1, 3, "14%");
+	window wLabel(1, 1, "CPULoad");
+	window wValue(1, 3, "47%");
 	addWindow("label", wLabel);
 	addWindow("value", wValue);
 }

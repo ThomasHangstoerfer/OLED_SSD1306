@@ -10,7 +10,7 @@ CC = g++
 
 # define any compile-time flags
 #CFLAGS = -Wall -g -DNO_WIRING_PI
-CFLAGS = -g -DNO_WIRING_PI
+CFLAGS = -g -pthread -std=c++11 -DNO_WIRING_PI -Wno-narrowing
 
 # define any libraries to link into executable:
 #   if I want to link in libraries (libx.so or libx.a) I use the -llibname
@@ -27,8 +27,8 @@ INCLUDES = -I.
 #LFLAGS = -L/home/newhall/lib  -L../lib
 
 # define the C source files
-SRCS = display.cpp window.cpp screen.cpp font.c font2.c font_16x16.cpp screen_controller.cpp load_screen.cpp
-HDRS = window.hpp screen.hpp screen_controller.hpp font_16x16.hpp load_screen.hpp
+SRCS = display.cpp window.cpp screen.cpp font.c font2.c font_16x16.cpp screen_controller.cpp load_screen.cpp time_screen.cpp
+HDRS = window.hpp screen.hpp screen_controller.hpp font_16x16.hpp load_screen.hpp time_screen.hpp
 
 # define the C object files 
 #

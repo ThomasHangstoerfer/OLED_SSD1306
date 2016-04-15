@@ -12,6 +12,8 @@ screen::screen()
 
 void screen::setVisible(bool v)
 {
+	
+	printf("screen::setVisible(%s)\n", v?"true":"false");
 	mVisible = v;
 	if ( mVisible )
 		update();

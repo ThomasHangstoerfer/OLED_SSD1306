@@ -31,6 +31,7 @@ convert -monochrome 16x16_pixel_font.png font_16x16.xbm
 #include "window.hpp"
 #include "screen.hpp"
 #include "load_screen.hpp"
+#include "time_screen.hpp"
 #include "screen_controller.hpp"
 
 extern long long int font[];
@@ -229,27 +230,30 @@ int main(int argc, char *argv[])
   window s1w2(0, 4, (std::string)"Thomas");
   s1.addWindow("tempval", s1w1);
   s1.addWindow("label", s1w2);
-  sc.addScreen("temperature", s1);
+  sc.addScreen("temperature", &s1);
 
   screen s2;
   window s2w1(6, 5, "14%");
   window s2w2(2, 3, (std::string)"Load");
   s2.addWindow("loadval", s2w1);
   s2.addWindow("loadlabel", s2w2);
-  sc.addScreen("load", s2);
+  sc.addScreen("load", &s2);
 
   screen s3;
   window s3w1(1, 5, "Philipp");
   window s3w2(2, 3, (std::string)"Hallo");
   s3.addWindow("loadval", s3w1);
   s3.addWindow("loadlabel", s3w2);
-  sc.addScreen("fips", s3);
+  sc.addScreen("fips", &s3);
 
   sc.dump();
   printf("setup finished\n\n\n");
 
-//  load_screen ls;
-//  sc.addScreen("loadscreen", ls);
+  load_screen ls;
+  sc.addScreen("loadscreen", &ls);
+
+  time_screen ts;
+  sc.addScreen("time", &ts);
 
   //printf("showScreen(temperature)\n");
     sc.showScreen("temperature");
