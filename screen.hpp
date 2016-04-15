@@ -2,7 +2,7 @@
 #define display_screen_hpp
 
 
-#include <map>
+#include <vector>
 #include <string>
 
 #include "window.hpp"
@@ -22,8 +22,7 @@ public:
 
 private:
 	bool mVisible;
-	std::map<std::string, window> mWindows;
-
+	std::vector<window> mWindows;
 };
 
 #endif

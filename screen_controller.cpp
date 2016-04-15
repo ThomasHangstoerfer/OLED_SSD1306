@@ -19,8 +19,8 @@ void screen_controller::addScreen(std::string name, screen s)
 		mCurrentScreen = mScreens.begin();
 	}
 //printf("mCurrentScreen = 0x%0x\n", (int)&mCurrentScreen);
-mCurrentScreen->second.dump();
-	printf("mScreens.size() = %lu\n", mScreens.size());
+//mCurrentScreen->second.dump();
+	//printf("mScreens.size() = %lu\n", mScreens.size());
 }
 
 void screen_controller::removeScreen(std::string name)
@@ -51,6 +51,8 @@ void screen_controller::showScreen(std::string name)
 			it->second.setVisible(false);
 		}
 	}
+	mCurrentScreen->second.dump();
+
 	if (!found)
 		printf("screen '%s' not found\n", name.c_str() );
 }
@@ -59,23 +61,29 @@ void screen_controller::showNext()
 {
 	printf("screen_controller::showNext()\n");
 
+	//printf("mCurrentScreen++\n");
+	if ( mCurrentScreen != mScreens.end() )
+		mCurrentScreen++;
+
 	if ( mCurrentScreen == mScreens.end() )
 	{
-		printf("mCurrentScreen == mScreens.end()\n");
+		//printf("mCurrentScreen == mScreens.end()\n");
 		mCurrentScreen = mScreens.begin();
 	}
-	else
-	{
-		printf("mCurrentScreen++\n");
-		mCurrentScreen++;
-	}
-	printf("showScreen()\n");
-//printf("mCurrentScreen = 0x%0x\n", (int)&mCurrentScreen);
 
-mCurrentScreen->second.dump();
-	mCurrentScreen = mScreens.begin();
-//mCurrentScreen->second.setVisible(true);
-	//showScreen(mCurrentScreen->first);
+	showScreen(mCurrentScreen->first);
+}
+
+void screen_controller::dump()
+{
+	printf("\n\nscreen_controller::dump()\n");
+	std::map<std::string,screen>::iterator it;
+	bool found = false;
+	for (it=mScreens.begin(); it!=mScreens.end(); ++it)
+	{
+		printf("%12s: \n", it->first.c_str() );
+		it->second.dump();
+	}
 }
 
 std::vector<std::string> screen_controller::list()

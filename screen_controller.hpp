@@ -17,6 +17,8 @@ public:
 	void showScreen(std::string name);
 	void showNext();
 
+	void dump();
+
 	std::vector<std::string> list();
 
 private:

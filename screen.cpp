@@ -23,40 +23,30 @@ void screen::update()
 	if ( !mVisible )
 		return;
 
-	std::map<std::string,window>::iterator it = mWindows.begin();
-  
-	for (it=mWindows.begin(); it!=mWindows.end(); ++it)
+	printf("screen::update()\n");
+	for (int i = 0; i < mWindows.size(); i++)
 	{
-		//std::cout << it->first << " => " << it->second << '\n';		
-		//std::cout << "Updating window " << it->first  << '\n';
-		//it->second.dump();
-		it->second.update();
+		mWindows[i].update();
 	}
 }
 
 void screen::addWindow(std::string name, window w)
 {
-	mWindows.insert( std::pair<std::string,window>(name,w) );
+	mWindows.push_back(w);
 }
 
 void screen::removeWindow(std::string name)
 {
-	std::map<std::string,window>::iterator it = mWindows.begin();
-	if ( mWindows.end() != mWindows.find(name) )
-		mWindows.erase (it);
 }
 
 void screen::dump()
 {
-	std::map<std::string,window>::iterator it = mWindows.begin();
-  
-	for (it=mWindows.begin(); it!=mWindows.end(); ++it)
+	//printf("+++++++++++++++\n");
+	//printf("screen::dump()\n");
+	for (int i = 0; i < mWindows.size(); i++)
 	{
-		//std::cout << it->first << " => " << it->second << '\n';		
-		//std::cout << "Updating window " << it->first  << '\n';
-		//it->second.dump();
-		printf("window-name = %s\n", it->first.c_str() );
-		it->second.update();
+		printf("%10swindow[%i]: ", "", i);
+		mWindows[i].dump();
 	}
 }
 

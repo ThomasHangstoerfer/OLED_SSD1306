@@ -210,26 +210,25 @@ int main(int argc, char *argv[])
   printf("display = %i\n", display);
   init(display);
   clear(display);
-  render(display, test);
-  render(display, test2);
-  printTxt(display, "              ");
-  printTxt(display, "                ");
-  printTxt(display, "H A L L O       ");
-  printTxt(display, "                ");
-  printTxt(display, "Gefaellt Dir    ");
-  printTxt(display, "mein Hut?       ");
-//  return 1;
 
-  clear(display);
-  printf("start\n");
+  //render(display, test);
+  //render(display, test2);
+  //printTxt(display, "              ");
+  //printTxt(display, "                ");
+  //printTxt(display, "H A L L O       ");
+  //printTxt(display, "                ");
+  //printTxt(display, "Gefaellt Dir    ");
+  //printTxt(display, "mein Hut?       ");
+  //return 1;
+
 //  screen_controller sc;
 
   screen s1;
   //s1.setVisible(true);
-  window w(2, 1, "28°C");
-  window w2(0, 4, (std::string)"Thomas");
-  s1.addWindow("tempval", w);
-  s1.addWindow("label", w2);
+  window s1w1(2, 1, "28°C");
+  window s1w2(0, 4, (std::string)"Thomas");
+  s1.addWindow("tempval", s1w1);
+  s1.addWindow("label", s1w2);
   sc.addScreen("temperature", s1);
 
   screen s2;
@@ -245,23 +244,23 @@ int main(int argc, char *argv[])
   s3.addWindow("loadval", s3w1);
   s3.addWindow("loadlabel", s3w2);
   sc.addScreen("fips", s3);
-  printf("setup finished\n");
+
+  sc.dump();
+  printf("setup finished\n\n\n");
 
 //  load_screen ls;
 //  sc.addScreen("loadscreen", ls);
 
-  printf("showScreen(temperature)\n");
-  clear(display);
-  sc.showScreen("temperature");
-
+  //printf("showScreen(temperature)\n");
+    sc.showScreen("temperature");
 
 
   // TODO clock-screen
 
-while (true)
-{
-  sleep(1);
-}
+//while (true)
+//{
+//  sleep(1);
+//}
 
   char in;
   //scanf("%c", &in);
@@ -271,7 +270,7 @@ while (true)
   {
     printf("sc.showNext()\n");
     sc.showNext();
-
+    
     /*
       if (mode == 0)
       {
