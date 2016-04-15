@@ -79,7 +79,7 @@ void window::setRange(int x1, int y1, int x2, int y2 )
 
 void window::setContent(std::vector<unsigned char> content)
 {
-	printf("window::setContent<unsigned char>(size = %i)\n", content.size() );
+	printf("window::setContent<unsigned char>(size = %lu)\n", content.size() );
 	mCharContent.clear();
 	mStringContent.clear();
 	mByteContent = content;
@@ -91,7 +91,7 @@ void window::setContent(std::vector<unsigned char> content)
 
 void window::setContent(std::vector<char> content)
 {
-	printf("window::setContent<char>(size = %i)\n", content.size() );
+	printf("window::setContent<char>(size = %lu)\n", content.size() );
 	mByteContent.clear();
 	mStringContent.clear();
 	mCharContent = content;
@@ -103,7 +103,7 @@ void window::setContent(std::vector<char> content)
 
 void window::setContent(std::string content)
 {
-	printf("window::setContent<stringn>('%s', size = %i)\n", content.c_str(), content.size() );
+	printf("window::setContent<stringn>('%s', size = %lu)\n", content.c_str(), content.size() );
 	mByteContent.clear();
 	mCharContent.clear();
 	mStringContent = content;
