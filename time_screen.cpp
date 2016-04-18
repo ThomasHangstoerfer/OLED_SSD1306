@@ -91,6 +91,7 @@ std::string time_screen::getJetzt()
 
   time(&jetzt);
   j = *localtime(&jetzt);
-  return string_format("%02i.%02i.%i %02i:%02i", j.tm_mday, j.tm_mon + 1, j.tm_year+1900, j.tm_hour, j.tm_min);
+  //return string_format("%02i.%02i.%i %02i:%02i", j.tm_mday, j.tm_mon + 1, j.tm_year+1900, j.tm_hour, j.tm_min);
+  return string_format("%02i:%02i", j.tm_hour, j.tm_min);
 }
 

@@ -15,6 +15,7 @@
 
 
 extern void render(int display, char *bitmap);
+extern void renderInv(int display, char *bitmap, bool inverted);
 extern char font2[128][8];
 extern void printTxt(int display, std::string t);
 
@@ -29,15 +30,17 @@ extern void printTxt(int display, std::string t);
 */
 
 window::window()
+: mIsInverted(false)
 {
 
 }
 
-window::window(int x1, int y1, int x2, int y2)
+window::window(int x1, int y1, int x2, int y2, bool isInverted)
 	: mX1(x1)
 	, mY1(y1)
 	, mX2(x2)
 	, mY2(y2)
+	, mIsInverted(isInverted)
 {
 
 }
@@ -49,6 +52,7 @@ window::window(const window& w)
 	mX2 = w.mX2;
 	mY2 = w.mY2;
 	mStringContent = w.mStringContent;
+	mIsInverted = w.mIsInverted;
 	// TODO gets called too often
 	//printf("copy contructor: %s -> %s\n", w.mStringContent.c_str(), mStringContent.c_str());
 }
@@ -56,6 +60,7 @@ window::window(const window& w)
 window::window(int x1, int y1, std::string content)
 	: mX1(x1)
 	, mY1(y1)
+	, mIsInverted(false)
 {
 	// TODO check params for validity
 	mStringContent = content;
@@ -66,7 +71,7 @@ window::window(int x1, int y1, std::string content)
 
 void window::dump()
 {
-	printf("window.dump( mX1=%i mY1=%i mX2=%i mY2=%i '%s')\n", mX1, mY1, mX2, mY2, mStringContent.c_str() );
+	printf("window.dump( mX1=%i mY1=%i mX2=%i mY2=%i mIsInverted=%i '%s')\n", mX1, mY1, mX2, mY2, mIsInverted, mStringContent.c_str() );
 }
 
 void window::setRange(int x1, int y1, int x2, int y2 )
@@ -103,7 +108,7 @@ void window::setContent(std::vector<char> content)
 
 void window::setContent(std::string content)
 {
-	printf("window::setContent<stringn>('%s', size = %lu)\n", content.c_str(), content.size() );
+	printf("window::setContent<string>('%s', size = %lu)\n", content.c_str(), content.size() );
 	mByteContent.clear();
 	mCharContent.clear();
 	mStringContent = content;
@@ -143,10 +148,10 @@ void window::update()
 
 				f16.getPatch(id, patchno, out);
 				char out1[] = {0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff};
-				render(display, out);
+				renderInv(display, out, mIsInverted);
 
 				f16.getPatch(id, patchno+1, out);
-				render(display, out);
+				renderInv(display, out, mIsInverted);
 			}
 			patchno+=2;
 		}

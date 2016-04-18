@@ -39,7 +39,12 @@ extern char font2[128][8];
 
 const int butPin = 23; // Active-low button - Broadcom pin 17, P1 pin 11
 
-  screen_controller sc;
+screen_controller sc;
+int display = 0;
+
+void renderInv(int display, char *bitmap, bool inverted );
+void render(int display, char *bitmap );
+
 
 void button_pressed()
 {
@@ -119,7 +124,14 @@ const char *byte_to_binary(int x)
   return b;
 }
 
-void render(int display, char *bitmap) {
+void render(int display, char *bitmap)
+{
+  renderInv(display, bitmap, false);
+}
+
+void renderInv(int display, char *bitmap, bool inverted )
+{
+  //printf("render(inverted = %i)\n", inverted);
 #ifndef NO_WIRING_PI
   char m[8], n[8] = {0};
   memcpy(&m, bitmap, 8);
@@ -131,7 +143,7 @@ void render(int display, char *bitmap) {
   }
   for (int x = 7; x >= 0; x--) {
     int a = (int)n[x];
-    wiringPiI2CWriteReg8(display, 0x40, a);
+    wiringPiI2CWriteReg8(display, 0x40, inverted?~a:a);
   }
 #endif
 }
@@ -147,6 +159,7 @@ void reset_pos(int display)
 
 void clear(int display)
 {
+  //printf("clear(%i)\n", display);
 #ifndef NO_WIRING_PI
   reset_pos(display);
   for (int x = 0; x < 128; x++) {
@@ -159,6 +172,7 @@ void clear(int display)
 
 void clear2(int display)
 {
+  //printf("clear2(%i)\n", display);
 #ifndef NO_WIRING_PI
   reset_pos(display);
   for (int x = 0; x < 128; x++) {
@@ -171,7 +185,7 @@ void clear2(int display)
 
 void printTxt(int display, std::string t)
 {
-  printf("printTxt(%s) size = %lu\n", t.c_str(), t.size() );
+  //printf("printTxt(%s) size = %lu\n", t.c_str(), t.size() );
   for (unsigned int i = 0; i < t.size(); i++ )
   {
     render(display, font2[t[i]]);
@@ -204,9 +218,9 @@ int main(int argc, char *argv[])
   };
 
 #ifndef NO_WIRING_PI
-  int display = wiringPiI2CSetup(0x3c);
+  display = wiringPiI2CSetup(0x3c);
 #else
-  int display = 0;
+  display = 0;
 #endif
   printf("display = %i\n", display);
   init(display);
@@ -226,8 +240,9 @@ int main(int argc, char *argv[])
 
   screen s1;
   //s1.setVisible(true);
-  window s1w1(2, 1, "28°C");
-  window s1w2(0, 4, (std::string)"Thomas");
+  window s1w1(2, 4, "21°C");
+  window s1w2(0, 1, (std::string)" Thomas ");
+  s1w2.setInverted(true);
   s1.addWindow("tempval", s1w1);
   s1.addWindow("label", s1w2);
   sc.addScreen("temperature", &s1);
@@ -255,26 +270,45 @@ int main(int argc, char *argv[])
   time_screen ts;
   sc.addScreen("time", &ts);
 
-  //printf("showScreen(temperature)\n");
-    sc.showScreen("temperature");
+  sc.showScreen("temperature");
 
 
   // TODO clock-screen
 
-//while (true)
-//{
-//  sleep(1);
-//}
-
   char in;
-  //scanf("%c", &in);
 
   int mode = 0;
   while(scanf("%c", &in))
   {
-    printf("sc.showNext()\n");
-    sc.showNext();
-    
+    printf("command: %c\n", in);
+
+    switch (in)
+    {
+      case 'C':
+        clear2(display);
+        break;
+      case 'c':
+        clear(display);
+        break;
+      case 'n':
+        sc.showNext();
+        break;
+      case 'u':
+        sc.update();
+        break;
+      case 's':
+        sc.dump();
+        break;
+      case '?':
+        printf("u - update\n");
+        printf("c - clear\n");
+        printf("C - clear inverted\n");
+        printf("n - next screen\n");
+        printf("s - show all screens\n");
+        break;
+      default:
+        break;
+    }    
     /*
       if (mode == 0)
       {

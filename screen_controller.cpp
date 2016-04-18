@@ -3,6 +3,10 @@
 
 #include "screen_controller.hpp"
 
+
+extern void clear(int d);
+extern int display;
+
 screen_controller::screen_controller()
 {
 	mCurrentScreen = mScreens.end();
@@ -55,6 +59,12 @@ void screen_controller::showScreen(std::string name)
 		printf("screen '%s' not found\n", name.c_str() );
 }
 
+void screen_controller::update()
+{
+	printf("screen_controller::update()\n");
+	mCurrentScreen->second->update();
+}
+
 void screen_controller::showNext()
 {
 	printf("screen_controller::showNext()\n");
@@ -68,7 +78,7 @@ void screen_controller::showNext()
 		//printf("mCurrentScreen == mScreens.end()\n");
 		mCurrentScreen = mScreens.begin();
 	}
-
+clear(display);
 	showScreen(mCurrentScreen->first);
 }
 
