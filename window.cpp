@@ -9,6 +9,7 @@
 #ifndef NO_WIRING_PI
 #include <wiringPiI2C.h>
 #endif
+#include "font.hpp"
 #include "font_16x16.hpp"
 #include "window.hpp"
 
@@ -18,6 +19,7 @@ extern void render(int display, char *bitmap);
 extern void renderInv(int display, char *bitmap, bool inverted);
 extern char font2[128][8];
 extern void printTxt(int display, std::string t);
+extern int display;
 
 /*
 
@@ -31,6 +33,8 @@ extern void printTxt(int display, std::string t);
 
 window::window()
 : mIsInverted(false)
+, mFontId(font::FONT_16x16)
+, mFont(NULL)
 {
 
 }
@@ -41,6 +45,8 @@ window::window(int x1, int y1, int x2, int y2, bool isInverted)
 	, mX2(x2)
 	, mY2(y2)
 	, mIsInverted(isInverted)
+	, mFontId(font::FONT_16x16)
+	, mFont(NULL)
 {
 
 }
@@ -53,6 +59,9 @@ window::window(const window& w)
 	mY2 = w.mY2;
 	mStringContent = w.mStringContent;
 	mIsInverted = w.mIsInverted;
+	mFontId = w.mFontId;
+	mFont = font::createFont(w.mFontId);
+
 	// TODO gets called too often
 	//printf("copy contructor: %s -> %s\n", w.mStringContent.c_str(), mStringContent.c_str());
 }
@@ -61,6 +70,8 @@ window::window(int x1, int y1, std::string content)
 	: mX1(x1)
 	, mY1(y1)
 	, mIsInverted(false)
+	, mFontId(font::FONT_16x16)
+	, mFont(NULL)
 {
 	// TODO check params for validity
 	mStringContent = content;
@@ -71,7 +82,7 @@ window::window(int x1, int y1, std::string content)
 
 void window::dump()
 {
-	printf("window.dump( mX1=%i mY1=%i mX2=%i mY2=%i mIsInverted=%i '%s')\n", mX1, mY1, mX2, mY2, mIsInverted, mStringContent.c_str() );
+	printf("window.dump( mX1=%i mY1=%i mX2=%i mY2=%i mIsInverted=%i mFontId=%i '%s')\n", mX1, mY1, mX2, mY2, mIsInverted, mFontId, mStringContent.c_str() );
 }
 
 void window::setRange(int x1, int y1, int x2, int y2 )
@@ -118,7 +129,6 @@ void window::setContent(std::string content)
 void window::update()
 {
 	//printf("window::update()\n");
-	int display = 0x3;
 
 #ifndef NO_WIRING_PI
 
@@ -140,20 +150,30 @@ void window::update()
 		char out[8];
 		unsigned char patchno = 0;
 
-		for (int line = 0; line < 2; line++)
+		if ( mFontId == font::FONT_16x16 )
+		{
+			for (int line = 0; line < 2; line++)
+			{
+				for (int x = 0; x < mStringContent.size(); x++)
+				{
+					unsigned char id = f16.getCharId(mStringContent[x]);
+
+					f16.getPatch(id, patchno, out);
+					char out1[] = {0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff};
+					renderInv(display, out, mIsInverted);
+
+					f16.getPatch(id, patchno+1, out);
+					renderInv(display, out, mIsInverted);
+				}
+				patchno+=2;
+			}
+		}
+		else
 		{
 			for (int x = 0; x < mStringContent.size(); x++)
 			{
-				unsigned char id = f16.getCharId(mStringContent[x]);
-
-				f16.getPatch(id, patchno, out);
-				char out1[] = {0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff};
-				renderInv(display, out, mIsInverted);
-
-				f16.getPatch(id, patchno+1, out);
-				renderInv(display, out, mIsInverted);
+				render(display, font2[mStringContent[x]]);
 			}
-			patchno+=2;
 		}
 	}
 	else if ( !mCharContent.empty() )
@@ -161,7 +181,7 @@ void window::update()
 		for (std::vector<char>::iterator it = mCharContent.begin() ; it != mCharContent.end(); ++it)
 		{
 			std::cout << "mCharContent: writing " << *it << std::endl;
-		    render(display, font2[*it]);
+			render(display, font2[*it]);
 		}
 	}
 	else if ( !mByteContent.empty() )
@@ -169,7 +189,7 @@ void window::update()
 		for (std::vector<unsigned char>::iterator it = mByteContent.begin() ; it != mByteContent.end(); ++it)
 		{
 			std::cout << "mByteContent: writing " << ((int)*it) << std::endl;
-		    //render(display, *it);
+			//render(display, *it);
 		}
 	}
 	else

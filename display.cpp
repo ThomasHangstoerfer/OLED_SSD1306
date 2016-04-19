@@ -241,6 +241,7 @@ int main(int argc, char *argv[])
   screen s1;
   //s1.setVisible(true);
   window s1w1(2, 4, "21°C");
+  s1w1.setFontId(font::FONT_8x8);
   window s1w2(0, 1, (std::string)" Thomas ");
   s1w2.setInverted(true);
   s1.addWindow("tempval", s1w1);
@@ -257,6 +258,7 @@ int main(int argc, char *argv[])
   screen s3;
   window s3w1(1, 5, "Philipp");
   window s3w2(2, 3, (std::string)"Hallo");
+  s3w2.setFontId(font::FONT_8x8);
   s3.addWindow("loadval", s3w1);
   s3.addWindow("loadlabel", s3w2);
   sc.addScreen("fips", &s3);

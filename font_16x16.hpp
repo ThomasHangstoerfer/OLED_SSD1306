@@ -4,12 +4,14 @@
 #include <utility>
 #include <map>
 
+#include "font.hpp"
 
-class font_16x16 
+class font_16x16 : public font 
 {
 public:
 
 	font_16x16();
+	virtual ~font_16x16() {};
 	std::pair<char, char> getCharPos(const char c);
 	unsigned char getCharId(const char c);
 

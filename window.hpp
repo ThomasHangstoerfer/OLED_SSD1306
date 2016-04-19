@@ -3,7 +3,7 @@
 
 
 #include <vector>
-
+#include "font.hpp"
 
 class window
 {
@@ -21,6 +21,7 @@ public:
 	void setRange(int x1, int y1, int x2, int y2 );
 
 	void setInverted(bool inv) { mIsInverted = inv; }
+	void setFontId(font::FontId fontId) { mFontId = fontId; }
 
 	void update();
 	void dump();
@@ -43,6 +44,8 @@ private:
 	std::vector<char> mCharContent;
 	std::string mStringContent;
 	bool mIsInverted;
+	font::FontId mFontId;
+	font* mFont;
 };
 
 #endif
