@@ -21,7 +21,7 @@ public:
 	void setRange(int x1, int y1, int x2, int y2 );
 
 	void setInverted(bool inv) { mIsInverted = inv; }
-	void setFontId(font::FontId fontId) { mFontId = fontId; }
+	void setFontId(font::FontId fontId);
 
 	void update();
 	void dump();

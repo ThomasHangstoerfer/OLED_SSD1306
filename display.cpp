@@ -236,6 +236,8 @@ int main(int argc, char *argv[])
   //printTxt(display, "Gefaellt Dir    ");
   //printTxt(display, "mein Hut?       ");
   //return 1;
+//  printTxt(display, "0123456789ABCDEF");
+//  return 1;
 
 //  screen_controller sc;
 

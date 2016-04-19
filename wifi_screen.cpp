@@ -27,8 +27,8 @@ void wifi_update_task(unsigned int wait)
 wifi_screen::wifi_screen() : screen()
 {
 	window wLabel(1, 1, "Wifi");
-	window wRateValue(1, 3, "");
-	window wQualValue(1, 5, "");
+	window wRateValue(0, 3, "                ");
+	window wQualValue(0, 5, "                ");
 	wRateValue.setFontId(font::FONT_8x8);
 	wQualValue.setFontId(font::FONT_8x8);
 	addWindow("label", wLabel);
@@ -72,7 +72,9 @@ void wifi_screen::updateWifiStatus()
 	printf("wifi_screen::updateWifiStatus()\n");
 
 
-	std::string command = "iwconfig wlp10s0|grep -e \"Bit Rate\" -e \"Quality\" |tr '\n' ' '|sed 's/ \\+/ /g'|cut -d' ' -f 3,4,8";
+	//std::string command = "iwconfig wlp10s0|grep -e \"Bit Rate\" -e \"Quality\" |tr '\n' ' '|sed 's/ \\+/ /g'|cut -d' ' -f 3,4,8";
+	std::string command = "iwconfig wlan0|grep -e \"Bit Rate\" -e \"Quality\" |tr '\n' ' '|sed 's/ \\+/ /g'|cut -d' ' -f 3,4,7";
+	printf("command: %s\n", command.c_str() );
 	char data[DATA_SIZE];
 
 	FILE* pf = popen(command.c_str(),"r");

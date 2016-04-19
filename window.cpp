@@ -80,6 +80,18 @@ window::window(int x1, int y1, std::string content)
 	printf("window( mX1=%i mY1=%i mX2=%i mY2=%i '%s')\n", mX1, mY1, mX2, mY2, mStringContent.c_str() );
 }
 
+void window::setFontId(font::FontId fontId)
+{
+	mFontId = fontId;
+	if ( mFontId == font::FONT_16x16)
+		mY2 = mY1 + /*font_hight_in_pixel/8 - 1  */ 1;
+	else if ( mFontId == font::FONT_8x8 )
+	{
+		mY2 = mY1;//+1;
+		//mX2 += 2;
+	}
+}
+
 void window::dump()
 {
 	printf("window.dump( mX1=%i mY1=%i mX2=%i mY2=%i mIsInverted=%i mFontId=%i '%s')\n", mX1, mY1, mX2, mY2, mIsInverted, mFontId, mStringContent.c_str() );
@@ -135,8 +147,18 @@ void window::update()
 	// restrict draw-range to the configured area
 	wiringPiI2CWriteReg8(display, 0x00, 0x21);    // set column address
 	wiringPiI2CWriteReg8(display, 0x00, mX1*8);   // column start address
-	wiringPiI2CWriteReg8(display, 0x00, mX1*8 + mX2*8*2-1); // column end address
-	//printf("column start=%i end=%i\n", mX1*8, mX1*8 + mX2*8*2-1);
+
+	if ( mFontId == font::FONT_16x16)
+	{
+		wiringPiI2CWriteReg8(display, 0x00, mX1*8 + mX2*8*2-1); // column end address
+		//printf("column start=%i end=%i\n", mX1*8, mX1*8 + mX2*8*2-1);
+	}
+	else //if ( mFontId == font::FONT_8x8 )
+	{
+		wiringPiI2CWriteReg8(display, 0x00, mX1*8 + mX2*8-1); // column end address
+		printf("column start=%i end=%i\n", mX1*8, mX1*8 + mX2*8-1);
+	}
+
 	wiringPiI2CWriteReg8(display, 0x00, 0x22); // set page address
 	wiringPiI2CWriteReg8(display, 0x00, mY1);  // page start address
 	wiringPiI2CWriteReg8(display, 0x00, mY2);  // page end address
