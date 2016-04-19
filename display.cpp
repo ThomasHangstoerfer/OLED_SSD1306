@@ -32,6 +32,7 @@ convert -monochrome 16x16_pixel_font.png font_16x16.xbm
 #include "screen.hpp"
 #include "load_screen.hpp"
 #include "time_screen.hpp"
+#include "wifi_screen.hpp"
 #include "screen_controller.hpp"
 
 extern long long int font[];
@@ -271,6 +272,9 @@ int main(int argc, char *argv[])
 
   time_screen ts;
   sc.addScreen("time", &ts);
+  
+  wifi_screen ws;
+  sc.addScreen("wifi", &ws);
 
   sc.showScreen("temperature");
 

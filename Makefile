@@ -27,8 +27,8 @@ INCLUDES = -I.
 #LFLAGS = -L/home/newhall/lib  -L../lib
 
 # define the C source files
-SRCS = display.cpp window.cpp screen.cpp font.cpp font_old.c font2.c font_16x16.cpp screen_controller.cpp load_screen.cpp time_screen.cpp
-HDRS = window.hpp screen.hpp screen_controller.hpp font.hpp font_16x16.hpp load_screen.hpp time_screen.hpp
+SRCS = display.cpp window.cpp screen.cpp font.cpp font_old.c font2.c font_16x16.cpp screen_controller.cpp load_screen.cpp time_screen.cpp wifi_screen.cpp
+HDRS = window.hpp screen.hpp screen_controller.hpp font.hpp font_16x16.hpp load_screen.hpp time_screen.hpp wifi_screen.hpp
 
 # define the C object files 
 #
