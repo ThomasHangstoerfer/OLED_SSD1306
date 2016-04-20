@@ -4,6 +4,7 @@
 #include <mutex>
 
 #include "screen.hpp"
+#include "window.hpp"
 
 class time_screen : public screen
 {
@@ -21,6 +22,9 @@ public:
 private:
 	std::string getJetzt();
 	std::string string_format(const std::string fmt, ...);
+
+	window wLabel;
+	window wValue;
 
 };
 

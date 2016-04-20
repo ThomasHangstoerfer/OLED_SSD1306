@@ -9,6 +9,9 @@ public:
 	
 	load_screen();
 
+private:
+	window wLabel;
+	window wValue;
 };
 
 #endif // load_screen_hpp

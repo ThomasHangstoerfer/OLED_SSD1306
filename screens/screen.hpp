@@ -15,7 +15,7 @@ public:
 	virtual ~screen(){};
 	
 	virtual void update();
-	virtual void addWindow(std::string name, window w);
+	virtual void addWindow(std::string name, window* w);
 	virtual void removeWindow(std::string name);
 
 	virtual void setVisible(bool v);
@@ -25,7 +25,7 @@ public:
 
 protected:
 	bool mVisible;
-	std::vector<window> mWindows;
+	std::vector<window*> mWindows;
 };
 
 #endif

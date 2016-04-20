@@ -25,15 +25,15 @@ void wifi_update_task(unsigned int wait)
 }
 
 wifi_screen::wifi_screen() : screen()
+	, wLabel(1, 1, "Wifi")
+	, wRateValue(0, 3, "                ")
+	, wQualValue(0, 5, "                ")
 {
-	window wLabel(1, 1, "Wifi");
-	window wRateValue(0, 3, "                ");
-	window wQualValue(0, 5, "                ");
 	wRateValue.setFontId(font::FONT_8x8);
 	wQualValue.setFontId(font::FONT_8x8);
-	addWindow("label", wLabel);
-	addWindow("rate", wRateValue);
-	addWindow("quality", wQualValue);
+	addWindow("label", &wLabel);
+	addWindow("rate", &wRateValue);
+	addWindow("quality", &wQualValue);
 	
 	wifi_screen::instance = this;
 }
@@ -84,11 +84,7 @@ void wifi_screen::updateWifiStatus()
 		return;
 	}
 
-       // Grab data from process execution
-       fgets(data, DATA_SIZE , pf);
-
-       // Print grabbed data to the screen.
-       //fprintf(stdout, "-%s-\n",data);
+	fgets(data, DATA_SIZE , pf);
 
 	pclose(pf);
 
@@ -99,14 +95,14 @@ void wifi_screen::updateWifiStatus()
 	}
 	if ( sv.size() > 1 )
 	{
-		mWindows[1].setContent(sv[0] + sv[1]);
+		mWindows[1]->setContent(sv[0] + sv[1]);
 	}
 	if ( sv.size() > 2 )
 	{
-		mWindows[2].setContent(sv[2]);
+		mWindows[2]->setContent(sv[2]);
 	}
-	mWindows[1].update();
-	mWindows[2].update();
+	mWindows[1]->update();
+	mWindows[2]->update();
 }
 
 

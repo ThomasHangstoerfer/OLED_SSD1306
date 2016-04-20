@@ -22,11 +22,11 @@ void update_task(unsigned int wait)
 }
 
 time_screen::time_screen() : screen()
+	, wLabel(1, 1, "TIME")
+	, wValue(1, 3, getJetzt())
 {
-	window wLabel(1, 1, "TIME");
-	window wValue(1, 3, getJetzt());
-	addWindow("label", wLabel);
-	addWindow("value", wValue);
+	addWindow("label", &wLabel);
+	addWindow("value", &wValue);
 	
 	instance = this;
 }
@@ -38,8 +38,8 @@ void time_screen::updateTime()
 
 	printf("time_screen::updateTime()\n");
 
-	mWindows[1].setContent(getJetzt());
-	mWindows[1].update();
+	mWindows[1]->setContent(getJetzt());
+	mWindows[1]->update();
 }
 
 

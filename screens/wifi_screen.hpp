@@ -26,6 +26,10 @@ private:
 
 	std::vector<std::string> split(const char *str, char c = ' ');
 
+	window wLabel;
+	window wRateValue;
+	window wQualValue;
+
 };
 
 #endif // wifi_screen_hpp

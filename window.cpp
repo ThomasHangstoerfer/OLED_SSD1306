@@ -63,7 +63,7 @@ window::window(const window& w)
 	mFont = font::createFont(w.mFontId);
 
 	// TODO gets called too often
-	//printf("copy contructor: %s -> %s\n", w.mStringContent.c_str(), mStringContent.c_str());
+	printf("copy contructor: %s -> %s\n", w.mStringContent.c_str(), mStringContent.c_str());
 }
 
 window::window(int x1, int y1, std::string content)

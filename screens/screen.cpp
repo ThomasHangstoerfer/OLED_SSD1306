@@ -28,11 +28,11 @@ void screen::update()
 	printf("screen::update()\n");
 	for (int i = 0; i < mWindows.size(); i++)
 	{
-		mWindows[i].update();
+		mWindows[i]->update();
 	}
 }
 
-void screen::addWindow(std::string name, window w)
+void screen::addWindow(std::string name, window* w)
 {
 	mWindows.push_back(w);
 }
@@ -48,7 +48,7 @@ void screen::dump()
 	for (int i = 0; i < mWindows.size(); i++)
 	{
 		printf("%10swindow[%i]: ", "", i);
-		mWindows[i].dump();
+		mWindows[i]->dump();
 	}
 }
 
