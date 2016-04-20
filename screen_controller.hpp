@@ -5,7 +5,7 @@
 #include <map>
 #include <string>
 
-#include "screen.hpp"
+#include "screens/screen.hpp"
 
 
 class screen_controller

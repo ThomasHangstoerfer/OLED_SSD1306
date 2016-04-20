@@ -29,10 +29,10 @@ convert -monochrome 16x16_pixel_font.png font_16x16.xbm
 #include <string>
 
 #include "window.hpp"
-#include "screen.hpp"
-#include "load_screen.hpp"
-#include "time_screen.hpp"
-#include "wifi_screen.hpp"
+#include "screens/screen.hpp"
+#include "screens/load_screen.hpp"
+#include "screens/time_screen.hpp"
+#include "screens/wifi_screen.hpp"
 #include "screen_controller.hpp"
 
 extern long long int font[];
