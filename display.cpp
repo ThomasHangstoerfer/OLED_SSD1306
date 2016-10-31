@@ -34,6 +34,7 @@ convert -monochrome 16x16_pixel_font.png font_16x16.xbm
 #include "screens/load_screen.hpp"
 #include "screens/time_screen.hpp"
 #include "screens/wifi_screen.hpp"
+#include "screens/graph_screen.hpp"
 #include "screen_controller.hpp"
 
 extern long long int font[];
@@ -222,6 +223,7 @@ int main(int argc, char *argv[])
 #ifndef NO_WIRING_PI
   display = wiringPiI2CSetup(0x3c);
 #else
+  printf("\n\n************\nNO_WIRING_PI\n************\n\n")
   display = 0;
 #endif
   printf("display = %i\n", display);
@@ -279,8 +281,12 @@ int main(int argc, char *argv[])
   wifi_screen ws;
   sc.addScreen("wifi", &ws);
 
+  graph_screen gs;
+  sc.addScreen("graph", &gs);
+
   //sc.showScreen("temperature");
-  sc.showScreen("time");
+  //sc.showScreen("time");
+  sc.showScreen("graph");
 
 
   // TODO clock-screen
