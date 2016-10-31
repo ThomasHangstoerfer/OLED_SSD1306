@@ -13,7 +13,6 @@ public:
 	window();
 	window(const window& w);
 	window(int x1, int y1, int x2, int y2, bool isInverted);
-	window(int x1, int y1, std::string content);
 
 	void setContent(std::string content);
 	void setContent(std::vector<unsigned char> content);
@@ -21,7 +20,6 @@ public:
 	void setRange(int x1, int y1, int x2, int y2 );
 
 	void setInverted(bool inv) { mIsInverted = inv; }
-	void setFontId(font::FontId fontId);
 
 	void update();
 	void dump();
@@ -33,7 +31,7 @@ public:
 		return stream;
 	}
 
-private:
+protected:
 
 	int mX1;
 	int mY1;
@@ -41,11 +39,8 @@ private:
 	int mY2;
 
 	std::vector<unsigned char> mByteContent;
-	std::vector<char> mCharContent;
-	std::string mStringContent;
+
 	bool mIsInverted;
-	font::FontId mFontId;
-	font* mFont;
 };
 
 #endif

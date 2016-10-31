@@ -95,14 +95,14 @@ void wifi_screen::updateWifiStatus()
 	}
 	if ( sv.size() > 1 )
 	{
-		mWindows[1]->setContent(sv[0] + sv[1]);
+		wRateValue.setContent(sv[0] + sv[1]);
 	}
 	if ( sv.size() > 2 )
 	{
-		mWindows[2]->setContent(sv[2]);
+		wQualValue.setContent(sv[2]);
 	}
-	mWindows[1]->update();
-	mWindows[2]->update();
+	wRateValue.update();
+	wQualValue.update();
 }
 
 

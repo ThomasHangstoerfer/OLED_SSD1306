@@ -29,6 +29,7 @@ convert -monochrome 16x16_pixel_font.png font_16x16.xbm
 #include <string>
 
 #include "window.hpp"
+#include "text_window.hpp"
 #include "screens/screen.hpp"
 #include "screens/load_screen.hpp"
 #include "screens/time_screen.hpp"
@@ -243,24 +244,24 @@ int main(int argc, char *argv[])
 
   screen s1;
   //s1.setVisible(true);
-  window s1w1(2, 4, "21°C");
+  text_window s1w1(2, 4, "21°C");
   s1w1.setFontId(font::FONT_8x8);
-  window s1w2(0, 1, (std::string)" Thomas ");
+  text_window s1w2(0, 1, (std::string)" Thomas ");
   s1w2.setInverted(true);
   s1.addWindow("tempval", &s1w1);
   s1.addWindow("label", &s1w2);
   sc.addScreen("temperature", &s1);
 
   screen s2;
-  window s2w1(6, 5, "14%");
-  window s2w2(2, 3, (std::string)"Load");
+  text_window s2w1(6, 5, "14%");
+  text_window s2w2(2, 3, (std::string)"Load");
   s2.addWindow("loadval", &s2w1);
   s2.addWindow("loadlabel", &s2w2);
   sc.addScreen("load", &s2);
 
   screen s3;
-  window s3w1(1, 5, "Philipp");
-  window s3w2(2, 3, (std::string)"Hallo");
+  text_window s3w1(1, 5, "Philipp");
+  text_window s3w2(2, 3, (std::string)"Hallo");
   s3w2.setFontId(font::FONT_8x8);
   s3.addWindow("loadval", &s3w1);
   s3.addWindow("loadlabel", &s3w2);

@@ -6,6 +6,7 @@
 #include <string>
 
 #include "screen.hpp"
+#include "text_window.hpp"
 
 class wifi_screen : public screen
 {
@@ -26,9 +27,9 @@ private:
 
 	std::vector<std::string> split(const char *str, char c = ' ');
 
-	window wLabel;
-	window wRateValue;
-	window wQualValue;
+	text_window wLabel;
+	text_window wRateValue;
+	text_window wQualValue;
 
 };
 

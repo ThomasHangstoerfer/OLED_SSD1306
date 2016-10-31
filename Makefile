@@ -29,6 +29,7 @@ INCLUDES = -I.
 # define the C source files
 SRCS =  display.cpp \
 	window.cpp \
+	text_window.cpp \
 	screens/screen.cpp \
 	font.cpp \
 	font_old.c \
@@ -38,7 +39,7 @@ SRCS =  display.cpp \
 	screens/load_screen.cpp \
 	screens/time_screen.cpp \
 	screens/wifi_screen.cpp
-HDRS = window.hpp screen.hpp screen_controller.hpp font.hpp font_16x16.hpp load_screen.hpp time_screen.hpp wifi_screen.hpp
+HDRS = window.hpp text_window.hpp screen.hpp screen_controller.hpp font.hpp font_16x16.hpp load_screen.hpp time_screen.hpp wifi_screen.hpp
 
 # define the C object files 
 #
