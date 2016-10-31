@@ -279,7 +279,8 @@ int main(int argc, char *argv[])
   wifi_screen ws;
   sc.addScreen("wifi", &ws);
 
-  sc.showScreen("temperature");
+  //sc.showScreen("temperature");
+  sc.showScreen("time");
 
 
   // TODO clock-screen

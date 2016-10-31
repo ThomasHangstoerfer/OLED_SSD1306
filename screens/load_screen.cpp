@@ -11,3 +11,9 @@ load_screen::load_screen() : screen()
 	addWindow("label", &wLabel);
 	addWindow("value", &wValue);
 }
+
+void load_screen::update()
+{
+	wLabel.update();
+	wValue.update();
+}

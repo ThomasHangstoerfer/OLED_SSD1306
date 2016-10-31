@@ -13,6 +13,7 @@ public:
 	window();
 	window(const window& w);
 	window(int x1, int y1, int x2, int y2, bool isInverted);
+	virtual ~window(){};
 
 	void setContent(std::string content);
 	void setContent(std::vector<unsigned char> content);
@@ -21,8 +22,8 @@ public:
 
 	void setInverted(bool inv) { mIsInverted = inv; }
 
-	void update();
-	void dump();
+	virtual void update();
+	virtual void dump();
 
 	friend std::ostream& operator<< (std::ostream& stream, const window& w)
 	{

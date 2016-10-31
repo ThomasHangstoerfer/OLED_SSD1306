@@ -10,6 +10,8 @@ public:
 	
 	load_screen();
 
+	virtual void update();
+
 private:
 	text_window wLabel;
 	text_window wValue;

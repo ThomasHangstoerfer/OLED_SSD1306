@@ -15,8 +15,9 @@ public:
 	wifi_screen();
 	~wifi_screen(){}
 	
-	void updateWifiStatus();
+	virtual void update();
 
+	void updateWifiStatus();
 
 	void setVisible(bool v) override;
 

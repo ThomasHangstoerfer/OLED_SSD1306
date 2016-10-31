@@ -12,6 +12,7 @@
 #include "font.hpp"
 #include "font_16x16.hpp"
 #include "window.hpp"
+#include "text_window.hpp"
 
 
 
@@ -87,6 +88,12 @@ void window::setContent(std::vector<unsigned char> content)
 void window::update()
 {
 	//printf("window::update()\n");
+	text_window* tw = dynamic_cast<text_window*>(this);
+	if ( tw != NULL )
+	{
+		tw->update();
+		return;
+	}
 
 #ifndef NO_WIRING_PI
 

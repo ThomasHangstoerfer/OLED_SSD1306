@@ -23,8 +23,11 @@ void update_task(unsigned int wait)
 
 time_screen::time_screen() : screen()
 	, wLabel(1, 1, "TIME")
-	, wValue(1, 3, getJetzt())
+	, wValue(0, 3, getJetzt())
 {
+	wValue.setFontId(font::FONT_16x16);
+	//wValue.setFontId(font::FONT_8x8);
+	wLabel.setContent("TIME");
 	addWindow("label", &wLabel);
 	addWindow("value", &wValue);
 	
@@ -39,6 +42,7 @@ void time_screen::updateTime()
 	printf("time_screen::updateTime()\n");
 
 	wValue.setContent(getJetzt());
+	wLabel.update();
 	wValue.update();
 }
 

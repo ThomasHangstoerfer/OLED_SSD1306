@@ -38,7 +38,11 @@ wifi_screen::wifi_screen() : screen()
 	wifi_screen::instance = this;
 }
 
-
+void wifi_screen::update()
+{
+	wRateValue.update();
+	wQualValue.update();
+}
 
 std::vector<std::string> wifi_screen::split(const char *str, char c /*= ' '*/)
 {
