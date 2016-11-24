@@ -223,7 +223,7 @@ int main(int argc, char *argv[])
 #ifndef NO_WIRING_PI
   display = wiringPiI2CSetup(0x3c);
 #else
-  printf("\n\n************\nNO_WIRING_PI\n************\n\n")
+  printf("\n\n************\nNO_WIRING_PI\n************\n\n");
   display = 0;
 #endif
   printf("display = %i\n", display);
