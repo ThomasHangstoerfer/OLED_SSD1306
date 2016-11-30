@@ -315,6 +315,18 @@ int main(int argc, char *argv[])
       case 's':
         sc.dump();
         break;
+      case '8':
+        gs.up();
+        break;
+      case '2':
+        gs.down();
+        break;
+      case '4':
+        gs.left();
+        break;
+      case '6':
+        gs.right();
+        break;
       case '?':
         printf("u - update\n");
         printf("c - clear\n");

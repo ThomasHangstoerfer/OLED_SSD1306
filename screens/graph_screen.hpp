@@ -16,10 +16,15 @@ public:
 	void updateScreen(); 
 	
 	void setVisible(bool v) override;
+	void up();
+	void down();
+	void left();
+	void right();
 
 	std::mutex mMutex;
 private:
 
+	int cursorX, cursorY;
 };
 
 #endif // graph_screen_hpp
