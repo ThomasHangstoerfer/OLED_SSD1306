@@ -201,17 +201,39 @@ void graph_screen::updateScreen()
 	printf("graph_screen::updateScreen()\n");
 	graph_instance->mMutex.lock();
 
+	static int offset = 0;
 	const double factor = PI / 180;
 	double sinus = 0, cosinus = 0, angle = 0;
 	int x = 0, y = 0;
-	int radius = 30;
-	int origin_x = 64;
-	int origin_y = 31;
+	int radius = 25;
+	int origin_x = 64 + offset;
+	int origin_y = 31 + offset;
 
 	initBuffer();
 
 	drawCircle(origin_x, origin_y, radius, false);
+	drawCircle(origin_x, origin_y, 3, true);
 	setpixel(origin_x, origin_y);
+
+	setpixel(origin_x+radius-1, origin_y); // 3
+	setpixel(origin_x+radius-2, origin_y); // 3
+	setpixel(origin_x+radius-1, origin_y-1); // 3
+	setpixel(origin_x+radius-2, origin_y+1); // 3
+
+	setpixel(origin_x, origin_y+radius-1); // 6
+	setpixel(origin_x, origin_y+radius-2); // 6
+	setpixel(origin_x-1, origin_y+radius-1); // 6
+	setpixel(origin_x+1, origin_y+radius-2); // 6
+
+	setpixel(origin_x-radius+1, origin_y); // 9
+	setpixel(origin_x-radius+2, origin_y); // 9
+	setpixel(origin_x-radius+1, origin_y-1); // 9
+	setpixel(origin_x-radius+2, origin_y+1); // 9
+
+	setpixel(origin_x, origin_y-radius+1); // 12
+	setpixel(origin_x, origin_y-radius+2); // 12
+	setpixel(origin_x-1, origin_y-radius+1); // 12
+	setpixel(origin_x+1, origin_y-radius+2); // 12
 
 	time_t jetzt;
 	struct tm j;
@@ -227,18 +249,26 @@ void graph_screen::updateScreen()
 
 	angle = (360.0/60*j.tm_min)-180;
 	sincos((angle*-1)*factor, &sinus, &cosinus);
-	x = origin_x+sinus*radius;
-	y = origin_y+cosinus*radius;
+	x = origin_x+sinus*radius*0.85;
+	y = origin_y+cosinus*radius*0.85;
 	drawLine(origin_x, origin_y, x, y);
 
-	angle = (360.0/60*j.tm_hour)-180;
+	angle = 360.0/(12.0)*((j.tm_hour%12))+j.tm_min/2;
+	angle -= 180;
 	sincos((angle*-1)*factor, &sinus, &cosinus);
 	x = origin_x+sinus*radius*0.7;
 	y = origin_y+cosinus*radius*0.7;
 	drawLine(origin_x, origin_y, x, y);
 
-	printBuffer();
+	//printBuffer();
 	drawBuffer();
+
+	static int lastMin = j.tm_min;
+	if (j.tm_min != lastMin )
+	{
+		offset = (offset+1)%4;
+		lastMin = j.tm_min;
+	}
 
 	graph_instance->mMutex.unlock();
 }
