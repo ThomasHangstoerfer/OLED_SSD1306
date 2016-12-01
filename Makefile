@@ -16,6 +16,7 @@ CFLAGS = -g -pthread -std=c++11 -DNO_WIRING_PI -Wno-narrowing
 #   if I want to link in libraries (libx.so or libx.a) I use the -llibname
 #   option, something like (this will link in libmylib.so and libm.so:
 #LIBS = -lwiringPi
+LIBS = -lm
 
 # define any directories containing header files other than /usr/include
 #

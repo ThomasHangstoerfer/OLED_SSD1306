@@ -4,10 +4,14 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdarg.h>  // For va_start, etc.
+#include <math.h>
 
 #include "window.hpp"
 #include "graph_screen.hpp"
 
+
+#define PI 3.14159265
+#define sgn(x) ((x<0)?-1:((x>0)?1:0))
 
 extern int display;
 
@@ -28,8 +32,8 @@ void graph_update_task(unsigned int wait)
 }
 
 graph_screen::graph_screen() : screen()
-, cursorX(1)
-, cursorY(1)
+, cursorX(0)
+, cursorY(0)
 {
 	graph_instance = this;
 }
@@ -127,47 +131,40 @@ void drawCircle(int center_x, int center_y, int radius, bool filled)
 	}
 }
 
+
 void drawLine(int x1, int y1, int x2, int y2)
 {
-
 	//printf("drawLine(x1 = %i, y1 = %i, x2 = %i, y2 = %i)\n", x1, y1, x2, y2);
+	// http://www.brackeen.com/vga/source/djgpp20/lines.c.html
+	int dx,dy,sdx,sdy,px,py,dxabs,dyabs,i;
+	float slope;
 
-	int dx, dy, p, end;
-	int x, y;
-
-	dx = abs(x1 - x2);
-	dy = abs(y1 - y2);
-	p = 2 * dy - dx;
-	
-	if (x1 > x2)
+	dx=x2-x1;      /* the horizontal distance of the line */
+	dy=y2-y1;      /* the vertical distance of the line */
+	dxabs=abs(dx);
+	dyabs=abs(dy);
+	sdx=sgn(dx);
+	sdy=sgn(dy);
+	if (dxabs>=dyabs) /* the line is more horizontal than vertical */
 	{
-		x = x2;
-		y = y2;
-		end = x1;
-	}
-	else
-	{
-		x = x1;
-		y = y1;
-		end = x2;
-	}
-	flippixel(x, y);
-	while (x < end)
-	{
-		x = x + 1;
-		if (p < 0)
+		slope=(float)dy / (float)dx;
+		for(i=0;i!=dx;i+=sdx)
 		{
-			p = p + 2 * dy;
+			px=i+x1;
+			py=slope*i+y1;
+			setpixel(px,py);
 		}
-		else
-		{
-			y = y + 1;
-			p = p + 2 * (dy - dx);
-		}
-		flippixel(x, y);
-		//printf("(%03i|%03i)\n", x, y);
 	}
-
+	else /* the line is more vertical than horizontal */
+	{
+		slope=(float)dx / (float)dy;
+		for(i=0;i!=dy;i+=sdy)
+		{
+			px=slope*i+x1;
+			py=i+y1;
+			setpixel(px,py);
+		}
+	}
 }
 
 void graph_screen::up()
@@ -204,6 +201,9 @@ void graph_screen::updateScreen()
 	printf("graph_screen::updateScreen()\n");
 	graph_instance->mMutex.lock();
 
+	const double factor = PI / 180;
+	double sinus = 0, cosinus = 0, angle = 0;
+	int x = 0, y = 0;
 	int radius = 30;
 	int origin_x = 64;
 	int origin_y = 31;
@@ -212,16 +212,33 @@ void graph_screen::updateScreen()
 
 	drawCircle(origin_x, origin_y, radius, false);
 	setpixel(origin_x, origin_y);
-	drawLine(origin_x, origin_y, origin_x+radius, origin_y+radius);
 
-//	drawLine(25, 25, 127, 63);
-//	drawLine(1, 1, 2, 13);
-	printf("(%03i|%03i)\n", cursorX, cursorY);
-	setpixel(cursorX, cursorY);
+	time_t jetzt;
+	struct tm j;
+	time(&jetzt);
+	j = *localtime(&jetzt);
+	printf("%02i:%02i:%02i\n", j.tm_hour, j.tm_min, j.tm_sec);
 
-//    printBuffer();
+	angle = (360.0/60*j.tm_sec)-180;
+	sincos((angle*-1)*factor, &sinus, &cosinus);
+	x = origin_x+sinus*radius;
+	y = origin_y+cosinus*radius;
+	drawLine(origin_x, origin_y, x, y);
+
+	angle = (360.0/60*j.tm_min)-180;
+	sincos((angle*-1)*factor, &sinus, &cosinus);
+	x = origin_x+sinus*radius;
+	y = origin_y+cosinus*radius;
+	drawLine(origin_x, origin_y, x, y);
+
+	angle = (360.0/60*j.tm_hour)-180;
+	sincos((angle*-1)*factor, &sinus, &cosinus);
+	x = origin_x+sinus*radius*0.7;
+	y = origin_y+cosinus*radius*0.7;
+	drawLine(origin_x, origin_y, x, y);
+
+	printBuffer();
 	drawBuffer();
-
 
 	graph_instance->mMutex.unlock();
 }
