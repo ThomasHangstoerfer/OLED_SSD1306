@@ -27,6 +27,8 @@ convert -monochrome 16x16_pixel_font.png font_16x16.xbm
 #include <stdio.h>
 #include <stdlib.h>
 #include <string>
+#include <signal.h>
+
 
 #include "window.hpp"
 #include "text_window.hpp"
@@ -47,7 +49,15 @@ int display = 0;
 
 void renderInv(int display, char *bitmap, bool inverted );
 void render(int display, char *bitmap );
+void clear(int display);
 
+
+void signal_callback_handler(int signum)
+{
+   printf("Caught signal %d\n",signum);
+   clear(display);
+   exit(signum);
+}
 
 void button_pressed()
 {
@@ -219,6 +229,8 @@ int main(int argc, char *argv[])
     0b00111100,
     0b01000010,
   };
+
+  signal(SIGINT, signal_callback_handler);
 
 #ifndef NO_WIRING_PI
   display = wiringPiI2CSetup(0x3c);
