@@ -16,6 +16,12 @@ Font in Gimp schwarz/weiss machen, zb 16x6 Zeichen
 Exportieren als png
 convert -monochrome 16x16_pixel_font.png font_16x16.xbm
 
+
+
+TODO: dont poll for rotary-knob-event but use interrupts
+
+
+
 */
 #ifndef NO_WIRING_PI
 #include <wiringPi.h>
@@ -29,7 +35,6 @@ convert -monochrome 16x16_pixel_font.png font_16x16.xbm
 #include <string>
 #include <signal.h>
 
-
 #include "window.hpp"
 #include "text_window.hpp"
 #include "screens/screen.hpp"
@@ -39,10 +44,16 @@ convert -monochrome 16x16_pixel_font.png font_16x16.xbm
 #include "screens/graph_screen.hpp"
 #include "screen_controller.hpp"
 
+
+#define  DDS_PIN1   17 // 0
+#define  DDS_PIN2   18 // 1
+#define  DDS_PRESS  23 //  4
+
 extern long long int font[];
 extern char font2[128][8];
 
 const int butPin = 23; // Active-low button - Broadcom pin 17, P1 pin 11
+const int ddsPressPin = 18; // Active-low button
 
 screen_controller sc;
 int display = 0;
@@ -52,17 +63,16 @@ void render(int display, char *bitmap );
 void clear(int display);
 
 
-void signal_callback_handler(int signum)
-{
-   printf("Caught signal %d\n",signum);
-   clear(display);
-   exit(signum);
-}
-
 void button_pressed()
 {
   printf("button_pressed\n");
-    sc.showNext();
+  sc.showNext();
+
+}
+
+void ddsbutton_pressed()
+{
+  printf("ddsbutton_pressed\n");
 
 }
 
@@ -73,12 +83,28 @@ void init(int display)
 #ifndef NO_WIRING_PI
 
   wiringPiSetupGpio(); // Initialize wiringPi -- using Broadcom pin numbers
+  /*
   pinMode(butPin, INPUT);      // Set button as INPUT
   pullUpDnControl(butPin, PUD_DOWN); // Enable pull-up resistor on button
+
+  pinMode(ddsPressPin, INPUT);      // Set button as INPUT
+  pullUpDnControl(ddsPressPin, PUD_DOWN); // Enable pull-up resistor on button
 
 
   //int wiringPiISR (int pin, int edgeType,  void (*function)(void)) ;
   wiringPiISR(butPin, INT_EDGE_RISING, button_pressed);
+  wiringPiISR(ddsPressPin, INT_EDGE_RISING, ddsbutton_pressed);
+  */
+
+  pinMode(DDS_PIN1, INPUT);
+  pinMode(DDS_PIN2, INPUT);
+  pinMode(DDS_PRESS, INPUT);
+
+  pullUpDnControl(DDS_PRESS, PUD_UP);
+
+  //wiringPiISR(DDS_PRESS, INT_EDGE_RISING, ddsbutton_pressed);
+
+
 
 //  sleep(10);
   //while(1)
@@ -156,7 +182,7 @@ void renderInv(int display, char *bitmap, bool inverted )
   }
   for (int x = 7; x >= 0; x--) {
     int a = (int)n[x];
-    wiringPiI2CWriteReg8(display, 0x40, inverted?~a:a);
+    wiringPiI2CWriteReg8(display, 0x40, inverted ? ~a : a);
   }
 #endif
 }
@@ -206,6 +232,13 @@ void printTxt(int display, std::string t)
   }
 }
 
+void  INThandler(int sig)
+{
+  printf("QUIT\n");
+  sc.showScreen("empty");
+  clear(display);
+  exit(0);
+}
 
 int main(int argc, char *argv[])
 {
@@ -230,7 +263,6 @@ int main(int argc, char *argv[])
     0b01000010,
   };
 
-  signal(SIGINT, signal_callback_handler);
 
 #ifndef NO_WIRING_PI
   display = wiringPiI2CSetup(0x3c);
@@ -241,6 +273,8 @@ int main(int argc, char *argv[])
   printf("display = %i\n", display);
   init(display);
   clear(display);
+
+  signal(SIGINT, INThandler);
 
   //render(display, test);
   //render(display, test2);
@@ -255,6 +289,8 @@ int main(int argc, char *argv[])
 //  return 1;
 
 //  screen_controller sc;
+
+
 
   screen s1;
   //s1.setVisible(true);
@@ -289,66 +325,117 @@ int main(int argc, char *argv[])
 
   time_screen ts;
   sc.addScreen("time", &ts);
-  
+
   wifi_screen ws;
   sc.addScreen("wifi", &ws);
 
   graph_screen gs;
   sc.addScreen("graph", &gs);
 
+  screen empty_screen; // used to clear the screen on exit
+  sc.addScreen("empty", &empty_screen); // fixed name, screen_controller checks it!
+
   //sc.showScreen("temperature");
   //sc.showScreen("time");
   sc.showScreen("graph");
 
-
-  // TODO clock-screen
-
   char in;
 
   int mode = 0;
-  while(scanf("%c", &in))
+
+  static volatile int globalCounter = 0 ;
+  unsigned char flag;
+  unsigned char Last_RoB_Status;
+  unsigned char Current_RoB_Status;
+
+  int pressed = 0;
+  int old_pressed = 0;
+
+  while (1) {
+    break;
+    printf("digitalRead(DDS_PIN1) = %i digitalRead(DDS_PIN2) = %i old_pressed = %i\n", digitalRead(DDS_PIN1), digitalRead(DDS_PIN2), old_pressed);
+    Last_RoB_Status = digitalRead(DDS_PIN2);
+
+    while (!digitalRead(DDS_PIN1)) {
+      Current_RoB_Status = digitalRead(DDS_PIN2);
+      flag = 1;
+    }
+
+    if (flag == 1) {
+      printf("flag = 1;\n");
+      flag = 0;
+      if ((Last_RoB_Status == 0) && (Current_RoB_Status == 1)) {
+        globalCounter ++;
+        printf("right\n");
+        sc.showNext();
+      }
+      if ((Last_RoB_Status == 1) && (Current_RoB_Status == 0)) {
+        globalCounter --;
+        printf("left\n");
+        sc.showPrev();
+      }
+    }
+    pressed = !digitalRead(DDS_PRESS);
+    if ( pressed == 1 && old_pressed == 0 )
+      printf("Pressed\n");
+    if ( pressed == 0 && old_pressed == 1 )
+      printf("Released\n");
+    if ( pressed != old_pressed )
+      old_pressed = pressed;
+
+//    usleep(100000);
+    //printf("globalCounter : %d\n",globalCounter);
+  }
+
+  while (scanf("%c", &in))
   {
     printf("command: %c\n", in);
 
     switch (in)
     {
-      case 'C':
-        clear2(display);
-        break;
-      case 'c':
-        clear(display);
-        break;
-      case 'n':
-        sc.showNext();
-        break;
-      case 'u':
-        sc.update();
-        break;
-      case 's':
-        sc.dump();
-        break;
-      case '8':
-        gs.up();
-        break;
-      case '2':
-        gs.down();
-        break;
-      case '4':
-        gs.left();
-        break;
-      case '6':
-        gs.right();
-        break;
-      case '?':
-        printf("u - update\n");
-        printf("c - clear\n");
-        printf("C - clear inverted\n");
-        printf("n - next screen\n");
-        printf("s - show all screens\n");
-        break;
-      default:
-        break;
-    }    
+    case 'C':
+      clear2(display);
+      break;
+    case 'c':
+      clear(display);
+      break;
+    case 'n':
+      sc.showNext();
+      break;
+    case 'u':
+      sc.update();
+      break;
+    case 's':
+      sc.dump();
+      break;
+    case '8':
+      gs.up();
+      break;
+    case '2':
+      gs.down();
+      break;
+    case '4':
+      gs.left();
+      break;
+    case '6':
+      gs.right();
+      break;
+    case 'q':
+      printf("clear screen and quit\n");
+      clear(display);
+      exit(0);
+      break;
+    case '?':
+      printf("u - update\n");
+      printf("c - clear\n");
+      printf("C - clear inverted\n");
+      printf("n - next screen\n");
+      printf("s - show all screens\n");
+      printf("q - clear screen and quit\n");
+      break;
+    default:
+      break;
+    }
     /*
       if (mode == 0)
       {
