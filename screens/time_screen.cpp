@@ -10,14 +10,14 @@
 
 
 time_screen* instance = NULL;
-void update_task(unsigned int wait)
+void update_task(unsigned int wait_ms)
 {
 	while (true)
 	{
 		instance->mMutex.lock();
 		instance->updateTime();
 		instance->mMutex.unlock();
-		std::this_thread::sleep_for(std::chrono::seconds(wait));
+		std::this_thread::sleep_for(std::chrono::milliseconds(wait_ms));
 	}
 }
 
@@ -55,11 +55,12 @@ void time_screen::setVisible(bool v)
 		mMutex.unlock();
 		printf("+++ time_screen::setVisible(%s)\n", v?"true":"false");
 		if ( t1 == NULL )
-			t1 = new std::thread(update_task, 1);
+			t1 = new std::thread(update_task, 100);
 	}
 	else
 	{
 		mMutex.lock();
+		wValue.setContent("");
 	}
 	screen::setVisible(v);
 }

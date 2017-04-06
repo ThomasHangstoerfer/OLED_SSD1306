@@ -20,14 +20,14 @@ graph_screen* graph_instance = NULL;
 static unsigned char b[128][64];
 
 
-void graph_update_task(unsigned int wait)
+void graph_update_task(unsigned int wait_ms)
 {
 	while (true)
 	{
 		//graph_instance->mMutex.lock();
 		graph_instance->updateScreen();
 		//graph_instance->mMutex.unlock();
-		std::this_thread::sleep_for(std::chrono::seconds(wait));
+		std::this_thread::sleep_for(std::chrono::milliseconds(wait_ms));
 	}
 }
 
@@ -281,7 +281,7 @@ void graph_screen::setVisible(bool v)
 		mMutex.unlock();
 		//printf("+++ graph_screen::setVisible(%s)\n", v?"true":"false");
 		if ( t1 == NULL )
-			t1 = new std::thread(graph_update_task, 1);
+			t1 = new std::thread(graph_update_task, 100);
 	}
 	else
 	{
