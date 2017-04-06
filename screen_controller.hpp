@@ -15,6 +15,7 @@ public:
 	void addScreen(std::string name, screen* s);
 	void removeScreen(std::string name);
 	void showScreen(std::string name);
+	void showPrev();
 	void showNext();
 	void update();
 
