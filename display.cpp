@@ -76,6 +76,34 @@ void ddsbutton_pressed()
 
 }
 
+void ddsbutton_released()
+{
+  printf("ddsbutton_released\n");
+
+  sc.showNext();
+}
+
+void ddsbutton_event()
+{
+  bool pressed = !digitalRead(DDS_PRESS);
+  printf("ddsbutton_event pressed = %i\n", pressed);
+  static int last = !pressed;
+
+  if ( last == pressed )
+  {
+    //printf("no change\n");
+  }
+
+  // TODO decouple ddsbutton-events from this ISR
+
+  if ( last == 0 && pressed )
+    ddsbutton_pressed();
+  if ( last == 1 && !pressed )
+    ddsbutton_released();
+
+  last = pressed;
+}
+
 void init(int display)
 {
 
@@ -102,7 +130,7 @@ void init(int display)
 
   pullUpDnControl(DDS_PRESS, PUD_UP);
 
-  //wiringPiISR(DDS_PRESS, INT_EDGE_RISING, ddsbutton_pressed);
+  wiringPiISR(DDS_PRESS, INT_EDGE_BOTH, ddsbutton_event);
 
 
 
