@@ -3,3 +3,6 @@ Experimets with an [i2c-oled-display](http://www.amazon.de/Zoll-serielle-OLED-Di
 based on SSD1306 controller.
 
 ![sample](https://raw.githubusercontent.com/ThomasHangstoerfer/OLED_SSD1306/master/doc/wifi-screen.jpg)
+
+
+![sample](https://raw.githubusercontent.com/ThomasHangstoerfer/OLED_SSD1306/master/doc/Pi2_oled_rotary_bb.png)
